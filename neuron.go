@@ -27,6 +27,19 @@ type Sync[T any] struct {
 }
 
 func NewSync[T any](ptr *T) (*Sync[T], error) {
+	// Validate ptr
+	if ptr == nil {
+		return nil, errors.New("NewSync: ptr must not be nil")
+	}
+	// Ensure T is a struct
+	t := reflect.TypeOf(*ptr)
+	if t.Kind() != reflect.Struct {
+		return nil, fmt.Errorf("NewSync requires pointer to struct, got %T", ptr)
+	}
+
+	// Register type for gob
+	gob.Register(*ptr)
+
 	home, _ := os.UserHomeDir()
 	typeName := fmt.Sprintf("%T", *ptr)
 	safe := strings.ReplaceAll(typeName, ".", "_")
