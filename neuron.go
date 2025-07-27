@@ -43,7 +43,7 @@ func NewSync[T any](ptr *T) (*Sync[T], error) {
 	home, _ := os.UserHomeDir()
 	typeName := fmt.Sprintf("%T", *ptr)
 	safe := strings.ReplaceAll(typeName, ".", "_")
-	path := filepath.Join(home, ".cache/syncstruct", safe+".mmap")
+	path := filepath.Join(home, ".cache/go-neuron", safe+".mmap")
 	_ = os.MkdirAll(filepath.Dir(path), 0755)
 
 	size := 64 * 1024
