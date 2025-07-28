@@ -14,6 +14,7 @@ require (
 
 require (
 	github.com/edsrzf/mmap-go v1.2.0 // indirect
+	github.com/fsnotify/fsnotify v1.9.0 // indirect
 	github.com/gofrs/flock v0.12.1 // indirect
 	golang.org/x/sys v0.26.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect

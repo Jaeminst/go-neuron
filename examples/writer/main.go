@@ -15,18 +15,18 @@ func main() {
 		log.Fatal(err)
 	}
 
-	live, err := neuron.NewSync(&config)
-	if err != nil {
+	if _, err := neuron.NewSync(&config); err != nil {
 		log.Fatal(err)
 	}
-
-	live.AutoFlush(300 * time.Millisecond)
 
 	for {
 		now := time.Now().Format("15:04:05")
 		config.Count++
 		config.Message = now
-		fmt.Println("[Writer] Updated shared struct at", now, "[", config.Count, "]")
+		config.XYZ.X++
+		config.XYZ.Y++
+		config.XYZ.Z++
+		fmt.Println("[Writer] Updated shared struct at", now, "[", config.Count, "] [", config.XYZ.X, config.XYZ.Y, config.XYZ.Z, "]")
 		time.Sleep(2 * time.Second)
 	}
 }

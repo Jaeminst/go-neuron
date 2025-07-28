@@ -32,7 +32,7 @@ func TestNewSyncFlush(t *testing.T) {
 	require.NoError(t, syncObj.Flush())
 
 	// Verify raw mmap content
-	mmapPath := filepath.Join(tmpHome, ".cache", "syncstruct", "neuron_AppConfig.mmap")
+	mmapPath := filepath.Join(tmpHome, ".cache", "go-neuron", "neuron.AppConfig.mmap")
 	data, err := os.ReadFile(mmapPath)
 	require.NoError(t, err)
 	raw := data[4:]
@@ -50,9 +50,6 @@ func TestAutoFlush(t *testing.T) {
 	syncObj, err := NewSync(&cfg)
 	require.NoError(t, err)
 	defer syncObj.Close()
-
-	// Start auto-flush
-	syncObj.AutoFlush(50 * time.Millisecond)
 
 	// Directly modify struct
 	cfg.Message = "auto"
@@ -81,4 +78,37 @@ func TestNewMmapRegion(t *testing.T) {
 	// Clean up
 	require.NoError(t, region.mmap.Unmap())
 	require.NoError(t, region.file.Close())
+}
+
+func TestOnChangeCallback(t *testing.T) {
+	tmpHome := t.TempDir()
+	require.NoError(t, os.Setenv("HOME", tmpHome))
+
+	cfg1 := AppConfig{Message: "original", Count: 1}
+	syncObj1, err := NewSync(&cfg1)
+	require.NoError(t, err)
+	defer syncObj1.Close()
+
+	cfg2 := AppConfig{}
+	syncObj2, err := NewSync(&cfg2)
+	require.NoError(t, err)
+	defer syncObj2.Close()
+
+	callbackCalled := make(chan AppConfig, 1)
+	syncObj2.OnChange(func(newVal AppConfig) {
+		callbackCalled <- newVal
+	})
+
+	// 변경 및 flush → 다른 인스턴스가 감지
+	cfg1.Message = "from test"
+	cfg1.Count = 99
+	require.NoError(t, syncObj1.Flush())
+
+	select {
+	case got := <-callbackCalled:
+		require.Equal(t, "from test", got.Message)
+		require.Equal(t, 99, got.Count)
+	case <-time.After(1 * time.Second):
+		t.Fatal("OnChange callback not triggered within timeout")
+	}
 }

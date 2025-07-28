@@ -6,9 +6,16 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+type XYZ struct {
+	X float64
+	Y float64
+	Z float64
+}
+
 type AppConfig struct {
 	Message string
 	Count   int
+	XYZ     *XYZ
 }
 
 func NewConfig[T any](path string) (T, error) {

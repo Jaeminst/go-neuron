@@ -17,7 +17,7 @@ func main() {
 	}
 
 	live.OnChange(func(cfg common.AppConfig) {
-		log.Printf("[OnChange] Count=%d, Message=%s\n", cfg.Count, cfg.Message)
+		log.Printf("[OnChange] X: %v, Y: %v, Z: %v\n", cfg.XYZ.X, cfg.XYZ.Y, cfg.XYZ.Z)
 	})
 
 	for {

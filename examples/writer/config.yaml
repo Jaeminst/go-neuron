@@ -1,2 +1,6 @@
 message: 00:00:00
 count: 0
+xyz:
+  x: 0.0
+  y: 0.0
+  z: 0.0
