@@ -13,7 +13,7 @@ It uses memory-mapped files (`mmap`) under the hood, with built-in gob serializa
 - 🔁 Background update propagation (no polling needed)
 - 🧩 Type-safe generic API (`Sync[T]`)
 - 🔐 Lock-safe updates
-- 📦 No external dependencies (aside from `mmap` & `flock`)
+- 📦 No external dependencies (aside from `mmap` & `flock` & `fsnotify`)
 
 ---
 
