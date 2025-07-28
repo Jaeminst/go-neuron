@@ -40,12 +40,15 @@ live.OnChange(func(s Status) {
 })
 ```
 
-### In a separate process:
+### In a separate process
 
 ```go
+status := Status{}
+if _, err := neuron.NewSync(&status); err != nil {
+    log.Fatal(err)
+}
 status.LoadAverage = 70.0
 status.AlertsOn = true
-err := live.Flush()
 ```
 
 ## 📦 Installation
